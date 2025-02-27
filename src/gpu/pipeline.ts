@@ -13,9 +13,9 @@ export function createPipeline(
 		arrayStride: 8,
 		attributes: [
 			{
-				format: "float32x2",
+				format: "float32x2" as const,
 				offset: 0,
-				shaderLocation: 0, // Position. Matches @location(0) in the @vertex shader.
+				shaderLocation: 0,
 			},
 		],
 	};

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { render } from "@/gpu/render";
 import { initWebGPU } from "@/gpu/core";
 import {
@@ -10,29 +10,41 @@ import {
 import { createPipeline } from "@/gpu/pipeline";
 import { createSimulationPipeline } from "@/gpu/simulation";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { UPDATE_INTERVAL } from "@/App";
+import { useStore } from "@/store/useStore";
+import ConfigMenu from "./ConfigMenu";
 
 const WebGPUCanvas: React.FC = () => {
+  const { gridSize, setGridSize, updateInterval, setUpdateInterval } =
+    useStore();
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<Error | null>(null);
-  const initialized = useRef(false);
   const frameId = useRef<number | null>(null);
   const size = useWindowSize();
 
-  const gridSize = useRef([
-    128,
-    Math.floor(128 * (window.innerHeight / (window.innerWidth as number))),
-  ]);
-
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
+    let isMounted = true;
+    let device: GPUDevice;
+    let context: GPUCanvasContext;
+    let bindGroups: GPUBindGroup[];
+    let pipeline: GPURenderPipeline;
+    let simulationPipeline: GPUComputePipeline;
+    let uniformBuffer: GPUBuffer;
+    let storageBuffer: GPUBuffer[];
 
     const start = async () => {
       try {
-        if (!canvasRef.current) return;
+        if (!canvasRef.current || !isMounted) return;
 
-        const { device, context } = await initWebGPU(canvasRef.current);
+        if (device) {
+          storageBuffer?.forEach((buf) => buf.destroy());
+          uniformBuffer?.destroy();
+          // Don't destroy device here - let garbage collection handle it
+        }
+
+        const init = await initWebGPU(canvasRef.current);
+        device = init.device;
+        context = init.context;
 
         const bindGroupLayout = createBindGroupLayout(device);
         const pipelineLayout = device.createPipelineLayout({
@@ -40,27 +52,28 @@ const WebGPUCanvas: React.FC = () => {
           bindGroupLayouts: [bindGroupLayout],
         });
 
-        const { maxComputeWorkgroupSizeX, maxComputeWorkgroupSizeY } = device.limits;
+        const { maxComputeWorkgroupSizeX, maxComputeWorkgroupSizeY } =
+          device.limits;
 
+        // Calculate dynamic workgroup sizes
         const [workgroupX, workgroupY] = calculateWorkgroupSize(
-          gridSize.current[0],
-          gridSize.current[1],
-          (maxComputeWorkgroupSizeX + maxComputeWorkgroupSizeY) / 2,
+          gridSize[0],
+          gridSize[1],
+          Math.min(maxComputeWorkgroupSizeX, maxComputeWorkgroupSizeY),
         );
 
-        const pipeline = createPipeline(device, pipelineLayout);
-        const uniformBuffer = createUniformBuffer(device, gridSize.current);
-        const storageBuffer = createStorageBuffer(device, gridSize.current);
-        const simulationPipeline = createSimulationPipeline(
+        pipeline = createPipeline(device, pipelineLayout);
+        uniformBuffer = createUniformBuffer(device, gridSize);
+        storageBuffer = createStorageBuffer(device, gridSize);
+        simulationPipeline = createSimulationPipeline(
           device,
           pipelineLayout,
           workgroupX,
           workgroupY,
         );
 
-        const bindGroups = [
+        bindGroups = [
           device.createBindGroup({
-            label: "Cell renderer bind group A",
             layout: bindGroupLayout,
             entries: [
               { binding: 0, resource: { buffer: uniformBuffer } },
@@ -69,7 +82,6 @@ const WebGPUCanvas: React.FC = () => {
             ],
           }),
           device.createBindGroup({
-            label: "Cell renderer bind group B",
             layout: bindGroupLayout,
             entries: [
               { binding: 0, resource: { buffer: uniformBuffer } },
@@ -83,7 +95,8 @@ const WebGPUCanvas: React.FC = () => {
         let lastUpdate = performance.now();
 
         const renderLoop = (time: number) => {
-          if (time - lastUpdate >= UPDATE_INTERVAL) {
+          if (!isMounted || !device) return;
+          if (time - lastUpdate >= updateInterval) {
             render(
               device,
               context,
@@ -92,7 +105,7 @@ const WebGPUCanvas: React.FC = () => {
               bindGroups,
               step,
               [workgroupX, workgroupY],
-              gridSize.current,
+              gridSize,
             );
             lastUpdate = time;
             step++;
@@ -109,9 +122,17 @@ const WebGPUCanvas: React.FC = () => {
     start();
 
     return () => {
-      if (frameId.current) cancelAnimationFrame(frameId.current);
+      isMounted = false;
+      if (frameId.current) {
+        cancelAnimationFrame(frameId.current);
+        frameId.current = null;
+      }
+
+      // Destroy resources but NOT the device
+      storageBuffer?.forEach((buf) => buf.destroy());
+      uniformBuffer?.destroy();
     };
-  }, []);
+  }, [gridSize, updateInterval]); // Effect runs again when these values change
 
   return (
     <div className="flex justify-center items-center flex-col">
@@ -122,9 +143,14 @@ const WebGPUCanvas: React.FC = () => {
         height={(size.height as number) - 50}
         className="max-w-full"
       />
+      <ConfigMenu
+        gridSize={gridSize}
+        setGridSize={setGridSize}
+        updateInterval={updateInterval}
+        setUpdateInterval={setUpdateInterval}
+      />
     </div>
   );
 };
 
 export default WebGPUCanvas;
-

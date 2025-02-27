@@ -5,7 +5,7 @@ import "./index.css";
 import App from "./App.tsx";
 
 scan({
-  enabled: true,
+  enabled: false,
 });
 
 createRoot(document.getElementById("root")!).render(

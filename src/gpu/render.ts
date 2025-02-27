@@ -25,6 +25,14 @@ export function render(
   computePass.dispatchWorkgroups(workgroupCountX, workgroupCountY);
   computePass.end();
 
+  const texture = context.getCurrentTexture();
+  const textureView = texture.createView();
+
+  if (!texture || !textureView) {
+    console.error("Failed to get texture or texture view");
+    return;
+  }
+
   const pass = encoder.beginRenderPass({
     colorAttachments: [
       {

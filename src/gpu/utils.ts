@@ -83,15 +83,9 @@ export function createStorageBuffer(device: GPUDevice) {
 
   // Initialize cell states randomly
   for (let i = 0; i < cellStateArray.length; ++i) {
-    cellStateArray[i] = Math.random() > 0.7 ? 1 : 0;
+    cellStateArray[i] = Math.random() > 0.8 ? 1 : 0;
   }
   device.queue.writeBuffer(cellStateStorage[0], 0, cellStateArray);
-
-  // Initialize an alternating pattern
-  for (let i = 0; i < cellStateArray.length; i++) {
-    cellStateArray[i] = i % 2;
-  }
-  device.queue.writeBuffer(cellStateStorage[1], 0, cellStateArray);
 
   return cellStateStorage;
 }

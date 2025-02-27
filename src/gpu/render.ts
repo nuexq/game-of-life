@@ -1,4 +1,3 @@
-import { GRID_SIZE } from "../App";
 import { createVertexBuffer } from "./utils";
 
 export function render(
@@ -9,6 +8,7 @@ export function render(
   bindGroups: GPUBindGroup[],
   step: number,
   workgroupSize: [number, number],
+  gridSize: number[],
 ) {
   const [vertexBuffer, vertices] = createVertexBuffer(device);
 
@@ -19,8 +19,8 @@ export function render(
   computePass.setPipeline(simulationPipeline);
   computePass.setBindGroup(0, bindGroups[step % 2]);
 
-  const workgroupCountX = Math.ceil(GRID_SIZE[0] / workgroupSize[0]);
-  const workgroupCountY = Math.ceil(GRID_SIZE[1] / workgroupSize[1]);
+  const workgroupCountX = Math.ceil(gridSize[0] / workgroupSize[0]);
+  const workgroupCountY = Math.ceil(gridSize[1] / workgroupSize[1]);
 
   computePass.dispatchWorkgroups(workgroupCountX, workgroupCountY);
   computePass.end();
@@ -40,7 +40,7 @@ export function render(
   pass.setBindGroup(0, bindGroups[step % 2]); // Now it actually alternates
 
   pass.setVertexBuffer(0, vertexBuffer);
-  pass.draw(vertices.length / 2, GRID_SIZE[0] * GRID_SIZE[1]);
+  pass.draw(vertices.length / 2, gridSize[0] * gridSize[1]);
 
   pass.end();
   device.queue.submit([encoder.finish()]);

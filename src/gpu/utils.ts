@@ -1,6 +1,3 @@
-import { GRID_SIZE } from "../App";
-
-// Create a Generic GPU Buffer (Reusable for Vertex, Index, Uniform Buffers)
 export function createGPUBuffer(
   device: GPUDevice,
   data: Float32Array | Uint16Array | Uint32Array,
@@ -52,8 +49,8 @@ export function createVertexBuffer(
 }
 
 // Create a Uniform Buffer
-export function createUniformBuffer(device: GPUDevice) {
-  const uniformArray = new Float32Array([GRID_SIZE[0], GRID_SIZE[1]]);
+export function createUniformBuffer(device: GPUDevice, gridSize: number[]) {
+  const uniformArray = new Float32Array([gridSize[0], gridSize[1]]);
 
   const uniformBuffer = createGPUBuffer(
     device,
@@ -64,8 +61,8 @@ export function createUniformBuffer(device: GPUDevice) {
 }
 
 // Create a Storage Buffer (Double Buffering for Cellular Automata)
-export function createStorageBuffer(device: GPUDevice) {
-  const cellStateArray = new Uint32Array(GRID_SIZE[0] * GRID_SIZE[1]);
+export function createStorageBuffer(device: GPUDevice, gridSize: number[]) {
+  const cellStateArray = new Uint32Array(gridSize[0] * gridSize[1]);
 
   // Create two storage buffers (double buffering for state updates)
   const cellStateStorage = [

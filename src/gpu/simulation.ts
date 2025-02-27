@@ -1,8 +1,8 @@
-import { WORKGROUP_SIZE } from "../App";
-
 export function createSimulationPipeline(
   device: GPUDevice,
   pipelineLayout: GPUPipelineLayout,
+  workgroupX: number,
+  workgroupY: number,
 ): GPUComputePipeline {
   const simulationShaderModule = device.createShaderModule({
     label: "Life Simulation Shader",
@@ -20,7 +20,7 @@ export function createSimulationPipeline(
         return cellStateIn[cellIndex(vec2(x, y))];
       }
 
-      @compute @workgroup_size(${WORKGROUP_SIZE}, ${WORKGROUP_SIZE})
+      @compute @workgroup_size(${workgroupX}, ${workgroupY})
       fn computeMain(@builtin(global_invocation_id) cell: vec3u) {
         let activeNeighbors = cellActive(cell.x+1, cell.y+1) +
                               cellActive(cell.x+1, cell.y) +

@@ -1,23 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { UPDATE_INTERVAL } from "../App";
 import { render } from "@/gpu/render";
 import { initWebGPU } from "@/gpu/core";
 import {
+  calculateWorkgroupSize,
   createBindGroupLayout,
   createStorageBuffer,
   createUniformBuffer,
 } from "@/gpu/utils";
 import { createPipeline } from "@/gpu/pipeline";
 import { createSimulationPipeline } from "@/gpu/simulation";
-import { useWindowSize } from "@uidotdev/usehooks";
+import { GRID_SIZE, UPDATE_INTERVAL } from "@/App";
 
 const WebGPUCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<Error | null>(null);
   const initialized = useRef(false);
   const frameId = useRef<number | null>(null);
-
-  // const size = useWindowSize();
 
   useEffect(() => {
     if (initialized.current) return;
@@ -35,12 +33,23 @@ const WebGPUCanvas: React.FC = () => {
           bindGroupLayouts: [bindGroupLayout],
         });
 
+        const { maxComputeWorkgroupSizeX, maxComputeWorkgroupSizeY } =
+          device.limits;
+        const [workgroupX, workgroupY] = calculateWorkgroupSize(
+          GRID_SIZE[0],
+          GRID_SIZE[1],
+          (maxComputeWorkgroupSizeX + maxComputeWorkgroupSizeY) / 2,
+        );
+        console.log(GRID_SIZE, workgroupX, workgroupY);
+
         const pipeline = createPipeline(device, pipelineLayout);
         const uniformBuffer = createUniformBuffer(device);
         const storageBuffer = createStorageBuffer(device);
         const simulationPipeline = createSimulationPipeline(
           device,
           pipelineLayout,
+          workgroupX,
+          workgroupY,
         );
 
         const bindGroups = [
@@ -94,6 +103,7 @@ const WebGPUCanvas: React.FC = () => {
               simulationPipeline,
               bindGroups,
               step++,
+              [workgroupX, workgroupY],
             );
             lastUpdate = time;
           }
@@ -117,7 +127,7 @@ const WebGPUCanvas: React.FC = () => {
   return (
     <div className="flex justify-center items-center flex-col">
       {error && <h1 className="text-rose-700">{error.message}</h1>}
-      <canvas ref={canvasRef} width={600} height={600} className="max-w-full" />
+      <canvas ref={canvasRef} width={1200} height={600} className="max-w-full" />
     </div>
   );
 };

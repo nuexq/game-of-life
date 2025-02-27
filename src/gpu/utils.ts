@@ -53,7 +53,7 @@ export function createVertexBuffer(
 
 // Create a Uniform Buffer
 export function createUniformBuffer(device: GPUDevice) {
-  const uniformArray = new Float32Array([GRID_SIZE, GRID_SIZE]);
+  const uniformArray = new Float32Array([GRID_SIZE[0], GRID_SIZE[1]]);
 
   const uniformBuffer = createGPUBuffer(
     device,
@@ -65,7 +65,7 @@ export function createUniformBuffer(device: GPUDevice) {
 
 // Create a Storage Buffer (Double Buffering for Cellular Automata)
 export function createStorageBuffer(device: GPUDevice) {
-  const cellStateArray = new Uint32Array(GRID_SIZE * GRID_SIZE);
+  const cellStateArray = new Uint32Array(GRID_SIZE[0] * GRID_SIZE[1]);
 
   // Create two storage buffers (double buffering for state updates)
   const cellStateStorage = [
@@ -83,7 +83,7 @@ export function createStorageBuffer(device: GPUDevice) {
 
   // Initialize cell states randomly
   for (let i = 0; i < cellStateArray.length; ++i) {
-    cellStateArray[i] = Math.random() > 0.8 ? 1 : 0;
+    cellStateArray[i] = Math.random() > 0.7 ? 1 : 0;
   }
   device.queue.writeBuffer(cellStateStorage[0], 0, cellStateArray);
 
@@ -121,4 +121,23 @@ export function createBindGroupLayout(device: GPUDevice) {
       },
     ],
   });
+}
+
+// calculate workgroup size
+export function calculateWorkgroupSize(
+  gridWidth: number,
+  gridHeight: number,
+  maxWorkgroupSize: number,
+) {
+  const workgroupX = Math.min(gridWidth, Math.floor(Math.sqrt(maxWorkgroupSize)));
+  let workgroupY = Math.min(
+    gridHeight,
+    Math.floor(maxWorkgroupSize / workgroupX),
+  );
+
+  while (workgroupX * workgroupY > maxWorkgroupSize) {
+    workgroupY--;
+  }
+
+  return [workgroupX, workgroupY];
 }

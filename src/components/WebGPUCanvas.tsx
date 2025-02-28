@@ -136,7 +136,7 @@ const WebGPUCanvas: React.FC = () => {
 	}, [gridSize]);
 
 	return (
-		<div className="flex justify-center items-center flex-col">
+		<div className="flex flex-col items-center justify-center">
 			{error && <h1 className="text-rose-700">{error.message}</h1>}
 			<canvas
 				ref={canvasRef}

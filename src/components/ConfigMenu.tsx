@@ -20,7 +20,6 @@ export default function ConfigMenu({
 					value={gridSize[0]}
 					onChange={(e) => setGridSize(Number(e.target.value))}
 					min={16}
-					max={512}
 					step={8}
 				/>
 			</label>
@@ -32,8 +31,6 @@ export default function ConfigMenu({
 						type="number"
 						value={updateInterval}
 						onChange={(e) => setUpdateInterval(Number(e.target.value))}
-						min={100}
-						max={5000}
 						step={100}
 					/>
 				</label>

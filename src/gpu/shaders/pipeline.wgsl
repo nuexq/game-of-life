@@ -27,5 +27,5 @@ fn vertexMain(@location(0) position: vec2f,
 
 @fragment
 fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
-  return vec4f(input.state, input.state, input.state, 1);
+    return mix(vec4f(0.149, 0.149, 0.149, 1), vec4f(1.0, 0.7, 0.3, 1.0), input.state);
 }

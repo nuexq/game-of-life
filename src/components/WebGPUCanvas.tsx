@@ -140,8 +140,8 @@ const WebGPUCanvas: React.FC = () => {
 			{error && <h1 className="text-rose-700">{error.message}</h1>}
 			<canvas
 				ref={canvasRef}
-				width={(size.width as number) - 50}
-				height={(size.height as number) - 50}
+				width={size.width as number}
+				height={size.height as number}
 				className="max-w-full"
 			/>
 			<ConfigMenu

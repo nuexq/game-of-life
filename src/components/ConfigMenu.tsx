@@ -1,3 +1,5 @@
+import { Slider } from "./ui/slider";
+
 interface ConfigMenuProps {
 	gridSize: number[];
 	setGridSize: (x: number) => void;
@@ -12,7 +14,7 @@ export default function ConfigMenu({
 	setUpdateInterval,
 }: ConfigMenuProps) {
 	return (
-		<div className="fixed top-0 right-0 flex flex-col items-center bg-red-500">
+		<div className="fixed top-0 right-0 flex flex-col items-start gap-5 bg-background rounded-3xl px-10 py-5">
 			<label>
 				Grid Size:
 				<input
@@ -21,19 +23,20 @@ export default function ConfigMenu({
 					onChange={(e) => setGridSize(Number(e.target.value))}
 					min={16}
 					step={8}
+
 				/>
 			</label>
 
-			<div className="mt-2">
-				<label>
-					Update Interval (ms):
-					<input
-						type="number"
-						value={updateInterval}
-						onChange={(e) => setUpdateInterval(Number(e.target.value))}
-						step={100}
-					/>
-				</label>
+			<div className="space-y-2">
+				<p className="text-xs">Update Interval (ms): {updateInterval}</p>
+				<Slider
+					defaultValue={[updateInterval]}
+					onValueChange={(newValue) => setUpdateInterval(newValue[0])}
+					min={10}
+					max={5000}
+          className="w-[60%]"
+					step={100}
+				/>
 			</div>
 		</div>
 	);

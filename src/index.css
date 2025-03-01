@@ -1,23 +1,61 @@
 @import "tailwindcss";
 
+@plugin "tailwindcss-animate";
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@theme {
+  --color-mantle: oklch(21.86% 0.045 282.64);
+  --color-background: oklch(24.29% 0.0304 283.91);
+  --color-foreground: oklch(87.87% 0.0426 272.28);
+  --color-card: oklch(24.29% 0.0304 283.91);
+  --color-card-foreground: oklch(87.87% 0.0426 272.28);
+  --color-popover: oklch(24.29% 0.0304 283.91);
+  --color-popover-foreground: oklch(87.87% 0.0426 272.28);
+  --color-primary: oklch(78.71% 0.1187 304.77);
+  --color-primary-foreground: oklch(24.29% 0.0304 283.91);
+  --color-secondary: oklch(75.1% 0.0396 273.93);
+  --color-secondary-foreground: oklch(24.29% 0.0304 283.91);
+  --color-muted: oklch(75.1% 0.0396 273.93);
+  --color-muted-foreground: oklch(81.68% 0.0403 272.86);
+  --color-accent: oklch(75.1% 0.0396 273.93);
+  --color-accent-foreground: oklch(24.29% 0.0304 283.91);
+  --color-destructive: oklch(75.56% 0.1297 2.76);
+  --color-destructive-foreground: oklch(21.55% 0.0254 284.06);
+  --color-border: oklch(40.37% 0.032 280.15);
+  --color-input: oklch(40.37% 0.032 280.15);
+  --color-ring: oklch(87.87% 0.0426 272.28);
+  --color-chart-1: oklch(75.56% 0.1297 2.76);
+  --color-chart-2: oklch(85.85% 0.0792 182.75);
+  --color-chart-3: oklch(76.64% 0.1113 259.88);
+  --color-chart-4: oklch(91.93% 0.0704 86.53);
+  --color-chart-5: oklch(85.77% 0.1092 142.72);
+  --radius-sm: calc(1rem - 4px);
+  --radius-md: calc(1rem - 2px);
+  --radius-lg: var(1rem);
+  --radius-xl: calc(1rem + 4px);
+}
+
 @layer base {
-	:root {
-		font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-		line-height: 1.5;
-		font-weight: 400;
+  * {
+    @apply box-border border-border;
+  }
 
-		font-synthesis: none;
-		text-rendering: optimizeLegibility;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-	}
+  body {
+    @apply flex justify-center items-center bg-background text-foreground min-h-screen;
+  }
 
-	body {
-		@apply flex min-h-screen items-center justify-center bg-gray-800 text-gray-200;
-	}
-
-	#root {
-		width: 100%;
-		height: 100%;
-	}
+  #root {
+    width: 100%;
+    height: 100%;
+  }
 }

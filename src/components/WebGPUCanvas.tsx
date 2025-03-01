@@ -97,7 +97,7 @@ const WebGPUCanvas: React.FC = () => {
 
 				const renderLoop = (time: number) => {
 					if (!isMounted || !device) return;
-					// Use the ref's current value for interval check
+
 					if (time - lastUpdate >= updateIntervalRef.current) {
 						render(
 							device,

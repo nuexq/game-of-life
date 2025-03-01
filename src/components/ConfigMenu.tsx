@@ -40,7 +40,7 @@ export default function ConfigMenu() {
 						defaultValue={[gridSize[0]]}
 						onValueChange={(e) => setGridSize(Number(e[0]))}
 						min={16}
-						max={6000}
+						max={window.innerWidth}
 						className="w-[60%]"
 						step={8}
 					/>

@@ -11,7 +11,6 @@ import { createPipeline } from "@/gpu/pipeline";
 import { createSimulationPipeline } from "@/gpu/simulation";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useStore } from "@/store/useStore";
-import ConfigMenu from "./ConfigMenu";
 
 const WebGPUCanvas: React.FC = () => {
 	const { gridSize, setGridSize, updateInterval, setUpdateInterval } =

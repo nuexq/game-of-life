@@ -9,7 +9,6 @@ import {
 import { ReactNode, useState } from "react";
 import { useStore } from "@/store/useStore";
 import { Switch } from "./ui/switch";
-import { useSpring, animated } from "@react-spring/web";
 
 export default function ConfigMenu() {
 	const {
@@ -34,15 +33,6 @@ export default function ConfigMenu() {
 		setPlaying(value);
 	};
 
-	// Create animation styles using React Spring
-	const springStyles = useSpring({
-		opacity: isOpen ? 1 : 0,
-		transform: isOpen
-			? "translateY(0) scale(1)"
-			: "translateY(-40px) scale(0.95)",
-		config: { tension: 250, friction: 50 },
-	});
-
 	return (
 		<Collapsible
 			open={isOpen}
@@ -58,8 +48,8 @@ export default function ConfigMenu() {
 				</CollapsibleTrigger>
 			</div>
 
-			<animated.div style={springStyles}>
-				<CollapsibleContent className="space-y-6 p-5 pb-8">
+			<CollapsibleContent open={isOpen}>
+				<div className="space-y-2 p-5 pt-3 pb-6">
 					<ConfigItem label="Playing" value={playing ? "On" : "Off"}>
 						<Switch
 							checked={playing}
@@ -91,8 +81,8 @@ export default function ConfigMenu() {
 							aria-label="Update Interval"
 						/>
 					</ConfigItem>
-				</CollapsibleContent>
-			</animated.div>
+				</div>
+			</CollapsibleContent>
 		</Collapsible>
 	);
 }
@@ -107,7 +97,7 @@ const ConfigItem = ({
 	value: number | string;
 }) => {
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-2 py-2">
 			<p className="text-xs text-muted-foreground">
 				{label}:{" "}
 				<span className="font-mono font-semibold text-foreground">{value}</span>

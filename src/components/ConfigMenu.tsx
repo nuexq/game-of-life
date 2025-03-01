@@ -49,7 +49,7 @@ export default function ConfigMenu() {
 			</div>
 
 			<CollapsibleContent className="space-y-6 border-t border-border p-5">
-				<ConfigItem label="Playing" value={playing}>
+				<ConfigItem label="Playing" value={playing ? "On" : "Off"}>
 					<Switch
 						checked={playing}
 						onCheckedChange={handlePlayingChange}
@@ -92,7 +92,7 @@ const ConfigItem = ({
 }: {
 	children: ReactNode;
 	label: string;
-	value: number | string | boolean;
+	value: number | string;
 }) => {
 	return (
 		<div className="flex flex-col gap-2">

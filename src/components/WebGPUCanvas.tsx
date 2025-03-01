@@ -144,12 +144,6 @@ const WebGPUCanvas: React.FC = () => {
 				height={size.height as number}
 				className="max-w-full"
 			/>
-			<ConfigMenu
-				gridSize={gridSize}
-				setGridSize={setGridSize}
-				updateInterval={updateInterval}
-				setUpdateInterval={setUpdateInterval}
-			/>
 		</div>
 	);
 };

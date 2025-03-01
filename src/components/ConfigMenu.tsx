@@ -13,10 +13,11 @@ export default function ConfigMenu({
 	updateInterval,
 	setUpdateInterval,
 }: ConfigMenuProps) {
+
 	return (
-		<div className="fixed top-0 right-0 flex flex-col items-start gap-5 bg-background rounded-3xl px-10 py-5">
+		<div className="fixed top-0 right-0 flex flex-col items-start gap-5 bg-card rounded-3xl px-10 py-5 m-5">
 			<label>
-				Grid Size:
+        <p className="text-xs">Grid Size:</p>
 				<input
 					type="number"
 					value={gridSize[0]}

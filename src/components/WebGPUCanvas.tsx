@@ -13,7 +13,7 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { useStore } from "@/store/useStore";
 
 const WebGPUCanvas: React.FC = () => {
-	const { gridSize, setGridSize, updateInterval, setUpdateInterval } =
+	const { gridSize, updateInterval } =
 		useStore();
 
 	const canvasRef = useRef<HTMLCanvasElement>(null);

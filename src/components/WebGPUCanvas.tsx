@@ -13,18 +13,21 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { useStore } from "@/store/useStore";
 
 const WebGPUCanvas: React.FC = () => {
-	const { gridSize, updateInterval } =
-		useStore();
+	const { gridSize, updateInterval, playing } = useStore();
 
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [error, setError] = useState<Error | null>(null);
 	const frameId = useRef<number | null>(null);
 	const size = useWindowSize();
 	const updateIntervalRef = useRef(updateInterval);
+	const isPlayingRef = useRef(playing);
 
 	useEffect(() => {
 		updateIntervalRef.current = updateInterval;
 	}, [updateInterval]);
+	useEffect(() => {
+		isPlayingRef.current = playing;
+	}, [playing]);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -97,7 +100,23 @@ const WebGPUCanvas: React.FC = () => {
 				const renderLoop = (time: number) => {
 					if (!isMounted || !device) return;
 
-					if (time - lastUpdate >= updateIntervalRef.current) {
+					if (step === 0) {
+						render(
+							device,
+							context,
+							pipeline,
+							simulationPipeline,
+							bindGroups,
+							step,
+							[workgroupX, workgroupY],
+							gridSize,
+						);
+						lastUpdate = time;
+						step++;
+					} else if (
+						time - lastUpdate >= updateIntervalRef.current &&
+						isPlayingRef.current
+					) {
 						render(
 							device,
 							context,

@@ -6,6 +6,8 @@ interface Store {
 	setGridSize: (x: number) => void;
 	updateInterval: number;
 	setUpdateInterval: (interval: number) => void;
+  playing: boolean;
+  setPlaying: (playing: boolean) => void;
 }
 
 // Zustand store
@@ -18,4 +20,6 @@ export const useStore = create<Store>((set) => ({
 		}),
 	updateInterval: 20, // Default update interval in ms
 	setUpdateInterval: (interval) => set({ updateInterval: interval }),
+  playing: false,
+  setPlaying: (playing) => set({ playing }),
 }));

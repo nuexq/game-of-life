@@ -8,10 +8,17 @@ import {
 } from "@/components/ui/collapsible";
 import { ReactNode, useState } from "react";
 import { useStore } from "@/store/useStore";
+import { Switch } from "./ui/switch";
 
 export default function ConfigMenu() {
-	const { gridSize, setGridSize, updateInterval, setUpdateInterval } =
-		useStore();
+	const {
+		gridSize,
+		setGridSize,
+		updateInterval,
+		setUpdateInterval,
+		playing,
+		setPlaying,
+	} = useStore();
 	const [isOpen, setIsOpen] = useState(false);
 
 	const handleGridSizeChange = (value: number[]) => {
@@ -20,6 +27,10 @@ export default function ConfigMenu() {
 
 	const handleUpdateIntervalChange = (value: number[]) => {
 		setUpdateInterval(Math.max(10, Math.min(value[0], 5000)));
+	};
+
+	const handlePlayingChange = (value: boolean) => {
+		setPlaying(value);
 	};
 
 	return (
@@ -38,6 +49,14 @@ export default function ConfigMenu() {
 			</div>
 
 			<CollapsibleContent className="space-y-6 border-t border-border p-5">
+				<ConfigItem label="Playing" value={playing}>
+					<Switch
+						checked={playing}
+						onCheckedChange={handlePlayingChange}
+						aria-label="Playing"
+					/>
+				</ConfigItem>
+
 				<ConfigItem label="Grid Size" value={`${gridSize[0]}x${gridSize[1]}`}>
 					<Slider
 						defaultValue={[gridSize[0]]}
@@ -73,7 +92,7 @@ const ConfigItem = ({
 }: {
 	children: ReactNode;
 	label: string;
-	value: number | string;
+	value: number | string | boolean;
 }) => {
 	return (
 		<div className="flex flex-col gap-2">

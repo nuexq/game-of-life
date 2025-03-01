@@ -12,7 +12,7 @@ import { useStore } from "@/store/useStore";
 export default function ConfigMenu() {
 	const { gridSize, setGridSize, updateInterval, setUpdateInterval } =
 		useStore();
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(true);
 
 	return (
 		<Collapsible
@@ -31,11 +31,7 @@ export default function ConfigMenu() {
 			</div>
 
 			<CollapsibleContent className="space-y-8 p-4 pb-8">
-				<ConfigItem>
-					<label className="text-sm">
-						Grid Size: {gridSize[0]}x{gridSize[1]}
-					</label>
-
+				<ConfigItem label="Grid Size" displayValue={`${gridSize[0]}x${gridSize[1]}`}>
 					<Slider
 						defaultValue={[gridSize[0]]}
 						onValueChange={(e) => setGridSize(Number(e[0]))}
@@ -46,10 +42,7 @@ export default function ConfigMenu() {
 					/>
 				</ConfigItem>
 
-				<ConfigItem>
-					<label className="text-sm">
-						Update Interval (ms): {updateInterval}
-					</label>
+				<ConfigItem label="Update Interval (ms)" displayValue={updateInterval}>
 					<Slider
 						defaultValue={[updateInterval]}
 						onValueChange={(newValue) => setUpdateInterval(newValue[0])}
@@ -67,13 +60,18 @@ export default function ConfigMenu() {
 const ConfigItem = ({
 	children,
 	label,
+	displayValue,
 }: {
 	children: ReactNode;
-	label?: string;
+	label: string;
+	displayValue: number | string;
 }) => {
 	return (
 		<div className="flex flex-col items-start justify-center gap-2">
-			{label && <label className="text-sm">{label}</label>} {children}
+			<p className="text-sm">
+				{label}: <span className="font-mono">{displayValue}</span>
+			</p>{" "}
+			{children}
 		</div>
 	);
 };

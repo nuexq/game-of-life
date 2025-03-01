@@ -8,5 +8,12 @@ export default defineConfig({
 	resolve: {
 		alias: [{ find: "@", replacement: resolve(__dirname, "./src") }],
 	},
-	plugins: [react(), tailwindcss()],
+	plugins: [
+		react({
+			babel: {
+				plugins: [["babel-plugin-react-compiler"]],
+			},
+		}),
+		tailwindcss(),
+	],
 });

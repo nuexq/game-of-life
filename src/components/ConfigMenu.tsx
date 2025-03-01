@@ -12,44 +12,53 @@ import { useStore } from "@/store/useStore";
 export default function ConfigMenu() {
 	const { gridSize, setGridSize, updateInterval, setUpdateInterval } =
 		useStore();
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
+
+	const handleGridSizeChange = (value: number[]) => {
+		setGridSize(Math.max(16, Math.min(value[0], window.innerWidth)));
+	};
+
+	const handleUpdateIntervalChange = (value: number[]) => {
+		setUpdateInterval(Math.max(10, Math.min(value[0], 5000)));
+	};
 
 	return (
 		<Collapsible
 			open={isOpen}
 			onOpenChange={setIsOpen}
-			className="fixed top-0 right-0 m-5 w-[250px] rounded-3xl bg-card"
+			className="fixed top-5 right-5 w-[280px] rounded-2xl border border-border bg-card shadow-lg"
 		>
-			<div className="flex items-center justify-between space-x-4 px-4 py-2">
-				<h4 className="text-sm font-semibold">Config Menu</h4>
+			<div className="flex items-center justify-between px-5 py-3">
+				<h4 className="text-sm font-semibold text-foreground">Config Menu</h4>
 				<CollapsibleTrigger asChild>
-					<Button variant="ghost" size="sm">
+					<Button variant="ghost" size="sm" aria-label="Toggle Config Menu">
 						<ChevronsUpDown className="h-4 w-4 stroke-foreground" />
-						<span className="sr-only">Toggle</span>
 					</Button>
 				</CollapsibleTrigger>
 			</div>
 
-			<CollapsibleContent className="space-y-8 p-4 pb-8">
-				<ConfigItem label="Grid Size" displayValue={`${gridSize[0]}x${gridSize[1]}`}>
+			<CollapsibleContent className="space-y-6 border-t border-border p-5">
+				<ConfigItem label="Grid Size" value={`${gridSize[0]}x${gridSize[1]}`}>
 					<Slider
 						defaultValue={[gridSize[0]]}
-						onValueChange={(e) => setGridSize(Number(e[0]))}
+						onValueChange={handleGridSizeChange}
 						min={16}
 						max={window.innerWidth}
-						className="w-[60%]"
 						step={8}
+						className="w-full"
+						aria-label="Grid Size"
 					/>
 				</ConfigItem>
 
-				<ConfigItem label="Update Interval (ms)" displayValue={updateInterval}>
+				<ConfigItem label="Update Interval (ms)" value={updateInterval}>
 					<Slider
 						defaultValue={[updateInterval]}
-						onValueChange={(newValue) => setUpdateInterval(newValue[0])}
+						onValueChange={handleUpdateIntervalChange}
 						min={10}
 						max={5000}
-						className="w-[60%]"
 						step={100}
+						className="w-full"
+						aria-label="Update Interval"
 					/>
 				</ConfigItem>
 			</CollapsibleContent>
@@ -60,17 +69,18 @@ export default function ConfigMenu() {
 const ConfigItem = ({
 	children,
 	label,
-	displayValue,
+	value,
 }: {
 	children: ReactNode;
 	label: string;
-	displayValue: number | string;
+	value: number | string;
 }) => {
 	return (
-		<div className="flex flex-col items-start justify-center gap-2">
-			<p className="text-sm">
-				{label}: <span className="font-mono">{displayValue}</span>
-			</p>{" "}
+		<div className="flex flex-col gap-2">
+			<p className="text-xs text-muted-foreground">
+				{label}:{" "}
+				<span className="font-mono font-semibold text-foreground">{value}</span>
+			</p>
 			{children}
 		</div>
 	);

@@ -9,6 +9,7 @@ import {
 import { ReactNode, useState } from "react";
 import { useStore } from "@/store/useStore";
 import { Switch } from "./ui/switch";
+import { useSpring, animated } from "@react-spring/web";
 
 export default function ConfigMenu() {
 	const {
@@ -33,6 +34,15 @@ export default function ConfigMenu() {
 		setPlaying(value);
 	};
 
+	// Create animation styles using React Spring
+	const springStyles = useSpring({
+		opacity: isOpen ? 1 : 0,
+		transform: isOpen
+			? "translateY(0) scale(1)"
+			: "translateY(-40px) scale(0.95)",
+		config: { tension: 250, friction: 50 },
+	});
+
 	return (
 		<Collapsible
 			open={isOpen}
@@ -48,39 +58,41 @@ export default function ConfigMenu() {
 				</CollapsibleTrigger>
 			</div>
 
-			<CollapsibleContent className="space-y-6 border-t border-border p-5">
-				<ConfigItem label="Playing" value={playing ? "On" : "Off"}>
-					<Switch
-						checked={playing}
-						onCheckedChange={handlePlayingChange}
-						aria-label="Playing"
-					/>
-				</ConfigItem>
+			<animated.div style={springStyles}>
+				<CollapsibleContent className="space-y-6 p-5 pb-8">
+					<ConfigItem label="Playing" value={playing ? "On" : "Off"}>
+						<Switch
+							checked={playing}
+							onCheckedChange={handlePlayingChange}
+							aria-label="Playing"
+						/>
+					</ConfigItem>
 
-				<ConfigItem label="Grid Size" value={`${gridSize[0]}x${gridSize[1]}`}>
-					<Slider
-						defaultValue={[gridSize[0]]}
-						onValueChange={handleGridSizeChange}
-						min={16}
-						max={window.innerWidth}
-						step={8}
-						className="w-full"
-						aria-label="Grid Size"
-					/>
-				</ConfigItem>
+					<ConfigItem label="Grid Size" value={`${gridSize[0]}x${gridSize[1]}`}>
+						<Slider
+							defaultValue={[gridSize[0]]}
+							onValueChange={handleGridSizeChange}
+							min={16}
+							max={window.innerWidth}
+							step={8}
+							className="w-full"
+							aria-label="Grid Size"
+						/>
+					</ConfigItem>
 
-				<ConfigItem label="Update Interval (ms)" value={updateInterval}>
-					<Slider
-						defaultValue={[updateInterval]}
-						onValueChange={handleUpdateIntervalChange}
-						min={10}
-						max={5000}
-						step={100}
-						className="w-full"
-						aria-label="Update Interval"
-					/>
-				</ConfigItem>
-			</CollapsibleContent>
+					<ConfigItem label="Update Interval (ms)" value={updateInterval}>
+						<Slider
+							defaultValue={[updateInterval]}
+							onValueChange={handleUpdateIntervalChange}
+							min={10}
+							max={5000}
+							step={100}
+							className="w-full"
+							aria-label="Update Interval"
+						/>
+					</ConfigItem>
+				</CollapsibleContent>
+			</animated.div>
 		</Collapsible>
 	);
 }

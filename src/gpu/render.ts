@@ -38,7 +38,7 @@ export function render(
       {
         view: context.getCurrentTexture().createView(),
         loadOp: "clear",
-        clearValue: { r: 0.149, g: 0.149, b: 0.149, a: 1.0 },
+        clearValue: { r: 0.118, g: 0.118, b: 0.18, a: 1.0 },
         storeOp: "store",
       },
     ],

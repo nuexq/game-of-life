@@ -42,7 +42,7 @@ export default function ConfigMenu() {
       <div className="flex items-center justify-between px-5 py-3">
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           aria-label="Toggle Simulation"
           onClick={() => setPlaying(!playing)}
         >
@@ -54,7 +54,7 @@ export default function ConfigMenu() {
         </Button>
 
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" aria-label="Toggle Config Menu">
+          <Button variant="ghost" size="icon" aria-label="Toggle Config Menu">
             <ChevronsUpDown className="size-4 stroke-foreground" />
           </Button>
         </CollapsibleTrigger>

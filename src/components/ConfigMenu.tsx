@@ -37,7 +37,7 @@ export default function ConfigMenu() {
       className={cn(
         "fixed top-5 right-5 rounded-2xl border border-border bg-card shadow-lg",
         "transition-[width] duration-300 ease-in-out",
-        isOpen ? "w-[280px]" : "w-auto",
+        isOpen ? "w-[280px]" : "w-[220px]",
       )}
     >
       <div className="flex items-center justify-between gap-4 px-5 py-3">

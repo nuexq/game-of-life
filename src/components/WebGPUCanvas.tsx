@@ -11,9 +11,10 @@ import { createPipeline } from "@/gpu/pipeline";
 import { createSimulationPipeline } from "@/gpu/simulation";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useStore } from "@/store/useStore";
+import { InitialPattern } from "@/lib/utils";
 
 const WebGPUCanvas: React.FC = () => {
-  const { gridSize, updateInterval, playing } = useStore();
+  const { gridSize, updateInterval, playing, patternType } = useStore();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<Error | null>(null);
@@ -65,9 +66,25 @@ const WebGPUCanvas: React.FC = () => {
           Math.min(maxComputeWorkgroupSizeX, maxComputeWorkgroupSizeY),
         );
 
+        switch (patternType.type) {
+          case InitialPattern.Random:
+            storageBuffer = createStorageBuffer(
+              device,
+              gridSize,
+              InitialPattern.Random,
+            );
+            break;
+          case InitialPattern.Blank:
+            storageBuffer = createStorageBuffer(
+              device,
+              gridSize,
+              InitialPattern.Blank,
+            );
+            break;
+        }
+
         pipeline = createPipeline(device, pipelineLayout);
         uniformBuffer = createUniformBuffer(device, gridSize);
-        storageBuffer = createStorageBuffer(device, gridSize);
         simulationPipeline = createSimulationPipeline(
           device,
           pipelineLayout,
@@ -151,7 +168,7 @@ const WebGPUCanvas: React.FC = () => {
       storageBuffer?.forEach((buf) => buf.destroy());
       uniformBuffer?.destroy();
     };
-  }, [gridSize]);
+  }, [gridSize, patternType.key, patternType.type]);
 
   return (
     <>

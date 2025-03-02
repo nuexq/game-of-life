@@ -1,3 +1,5 @@
+import { InitialPattern } from "@/lib/utils";
+
 export function createGPUBuffer(
   device: GPUDevice,
   data: Float32Array | Uint16Array | Uint32Array,
@@ -61,10 +63,13 @@ export function createUniformBuffer(device: GPUDevice, gridSize: number[]) {
 }
 
 // Create a Storage Buffer (Double Buffering for Cellular Automata)
-export function createStorageBuffer(device: GPUDevice, gridSize: number[]) {
+export function createStorageBuffer(
+  device: GPUDevice,
+  gridSize: number[],
+  patternType: InitialPattern,
+) {
   const cellStateArray = new Uint32Array(gridSize[0] * gridSize[1]);
 
-  // Create two storage buffers (double buffering for state updates)
   const cellStateStorage = [
     device.createBuffer({
       label: "Cell State A",
@@ -78,10 +83,16 @@ export function createStorageBuffer(device: GPUDevice, gridSize: number[]) {
     }),
   ];
 
-  // Initialize cell states randomly
-  for (let i = 0; i < cellStateArray.length; ++i) {
-    cellStateArray[i] = Math.random() > 0.8 ? 1 : 0;
+  switch (patternType) {
+    case InitialPattern.Random:
+      for (let i = 0; i < cellStateArray.length; ++i) {
+        cellStateArray[i] = Math.random() > 0.8 ? 1 : 0;
+      }
+      break;
+    case InitialPattern.Blank:
+      break;
   }
+
   device.queue.writeBuffer(cellStateStorage[0], 0, cellStateArray);
 
   return cellStateStorage;
@@ -120,7 +131,10 @@ export function calculateWorkgroupSize(
   gridHeight: number,
   maxWorkgroupSize: number,
 ) {
-  const workgroupX = Math.min(gridWidth, Math.floor(Math.sqrt(maxWorkgroupSize)));
+  const workgroupX = Math.min(
+    gridWidth,
+    Math.floor(Math.sqrt(maxWorkgroupSize)),
+  );
   let workgroupY = Math.min(
     gridHeight,
     Math.floor(maxWorkgroupSize / workgroupX),

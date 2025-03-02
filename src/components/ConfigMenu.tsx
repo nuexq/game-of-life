@@ -1,6 +1,6 @@
 import { Slider } from "./ui/slider";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown, Pause, Play } from "lucide-react";
+import { ChevronsUpDown, Dice5, Pause, Play, Square } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/collapsible";
 import { ReactNode, useState } from "react";
 import { useStore } from "@/store/useStore";
-import { cn } from "@/lib/utils";
+import { cn, InitialPattern } from "@/lib/utils";
 
 export default function ConfigMenu() {
   const {
@@ -18,6 +18,7 @@ export default function ConfigMenu() {
     setUpdateInterval,
     playing,
     setPlaying,
+    setPatternType,
   } = useStore();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -36,22 +37,40 @@ export default function ConfigMenu() {
       className={cn(
         "fixed top-5 right-5 rounded-2xl border border-border bg-card shadow-lg",
         "transition-[width] duration-300 ease-in-out",
-        isOpen ? "w-[280px]" : "w-[180px]",
+        isOpen ? "w-[280px]" : "w-auto",
       )}
     >
-      <div className="flex items-center justify-between px-5 py-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Toggle Simulation"
-          onClick={() => setPlaying(!playing)}
-        >
-          {playing ? (
-            <Pause className="size-4 stroke-foreground" />
-          ) : (
-            <Play className="size-4 stroke-foreground" />
-          )}
-        </Button>
+      <div className="flex items-center justify-between gap-4 px-5 py-3">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Toggle Simulation"
+            onClick={() => setPlaying(!playing)}
+          >
+            {playing ? (
+              <Pause className="size-4 stroke-foreground" />
+            ) : (
+              <Play className="size-4 stroke-foreground" />
+            )}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="set to Random Pattern's"
+            onClick={() => setPatternType(InitialPattern.Random)}
+          >
+            <Dice5 className="size-4 stroke-foreground" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="set to Blank"
+            onClick={() => setPatternType(InitialPattern.Blank)}
+          >
+            <Square className="size-4 stroke-foreground" />
+          </Button>
+        </div>
 
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="icon" aria-label="Toggle Config Menu">

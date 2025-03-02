@@ -61,7 +61,6 @@ export default function ConfigMenu() {
       </div>
 
       <CollapsibleContent open={isOpen}>
-        <div className="space-y-2 px-5 py-3 pb-4">
           <ConfigItem label="Grid Size" value={`${gridSize[0]}x${gridSize[1]}`}>
             <Slider
               defaultValue={[gridSize[0]]}
@@ -85,7 +84,6 @@ export default function ConfigMenu() {
               aria-label="Update Interval"
             />
           </ConfigItem>
-        </div>
       </CollapsibleContent>
     </Collapsible>
   );

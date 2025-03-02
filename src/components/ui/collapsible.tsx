@@ -58,9 +58,9 @@ function CollapsibleContent({
       <AnimatePresence mode="wait">
         {open && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0, height: 0, borderTopWidth: 0 }}
+            animate={{ opacity: 1, height, borderTopWidth: 1 }}
+            exit={{ opacity: 0, height: 0, borderTopWidth: 0 }}
             transition={{
               type: "spring",
               stiffness: 250,
@@ -68,7 +68,7 @@ function CollapsibleContent({
               mass: 0.5,
               restDelta: 0.1,
             }}
-            className="overflow-hidden will-change-[height] contain-strict"
+            className="overflow-hidden will-change-[height] contain-strict border-border space-y-2 px-5 py-3"
             ref={contentRef}
           >
             {children}

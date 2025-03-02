@@ -67,6 +67,7 @@ export function createStorageBuffer(
   device: GPUDevice,
   gridSize: number[],
   patternType: InitialPattern,
+  gliderCount: number,
 ) {
   const cellStateArray = new Uint32Array(gridSize[0] * gridSize[1]);
 
@@ -84,15 +85,37 @@ export function createStorageBuffer(
   ];
 
   switch (patternType) {
-    case InitialPattern.Random:
+    case InitialPattern.Random: {
       for (let i = 0; i < cellStateArray.length; ++i) {
         cellStateArray[i] = Math.random() > 0.8 ? 1 : 0;
       }
       break;
-    case InitialPattern.Blank:
+    }
+    case InitialPattern.Glider: {
+      for (let i = 0; i < gliderCount; i++) {
+        const glider = [
+          [0, 1],
+          [1, 2],
+          [2, 0],
+          [2, 1],
+          [2, 2],
+        ];
+        const offsetX = Math.floor(Math.random() * (gridSize[0] - 3));
+        const offsetY = Math.floor(Math.random() * (gridSize[1] - 3));
+
+        glider.forEach(([x, y]) => {
+          const gridX = offsetX + x;
+          const gridY = offsetY + y;
+          if (gridX < gridSize[0] && gridY < gridSize[1]) {
+            cellStateArray[gridY * gridSize[0] + gridX] = 1;
+          }
+        });
+      }
       break;
+    }
   }
 
+  // Write the initial state to the buffer
   device.queue.writeBuffer(cellStateStorage[0], 0, cellStateArray);
 
   return cellStateStorage;

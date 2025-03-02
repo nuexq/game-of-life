@@ -7,5 +7,5 @@ export function cn(...inputs: ClassValue[]) {
 
 export enum InitialPattern {
   Random,
-  Blank
+  Glider,
 }

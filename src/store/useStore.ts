@@ -11,6 +11,8 @@ interface Store {
   setPlaying: (playing: boolean) => void;
   patternType: { type: InitialPattern; key: number };
   setPatternType: (patternType: InitialPattern) => void;
+  gliderCount: number;
+  setGliderCount: (count: number) => void;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -28,4 +30,6 @@ export const useStore = create<Store>((set) => ({
   patternType: { type: InitialPattern.Random, key: Date.now() },
   setPatternType: (patternType: InitialPattern) =>
     set({ patternType: { type: patternType, key: Date.now() } }),
+  gliderCount: 5,
+  setGliderCount: (count) => set({ gliderCount: count }),
 }));

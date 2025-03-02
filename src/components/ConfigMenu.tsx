@@ -1,6 +1,6 @@
 import { Slider } from "./ui/slider";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown, Dice5, Pause, Play, Square } from "lucide-react";
+import { ArrowUpRight, ChevronsUpDown, Dice5, Pause, Play } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -19,8 +19,13 @@ export default function ConfigMenu() {
     playing,
     setPlaying,
     setPatternType,
+    patternType,
+    gliderCount,
+    setGliderCount,
   } = useStore();
+
   const [isOpen, setIsOpen] = useState(false);
+  const [contentKey, setContentKey] = useState(0); // Unique key to force re-render
 
   const handleGridSizeChange = (value: number[]) => {
     setGridSize(Math.max(16, Math.min(value[0], window.innerWidth)));
@@ -28,6 +33,17 @@ export default function ConfigMenu() {
 
   const handleUpdateIntervalChange = (value: number[]) => {
     setUpdateInterval(Math.max(10, Math.min(value[0], 5000)));
+  };
+
+  const handleGliderCountChange = (value: number[]) => {
+    setGliderCount(value[0]);
+  };
+
+  const handlePatternChange = (pattern: InitialPattern) => {
+    setPatternType(pattern);
+    if (pattern !== patternType.type) {
+      setContentKey((prevKey) => prevKey + 1);
+    }
   };
 
   return (
@@ -58,7 +74,7 @@ export default function ConfigMenu() {
             variant="ghost"
             size="icon"
             aria-label="set to Random Pattern's"
-            onClick={() => setPatternType(InitialPattern.Random)}
+            onClick={() => handlePatternChange(InitialPattern.Random)}
           >
             <Dice5 className="size-4 stroke-foreground" />
           </Button>
@@ -66,9 +82,9 @@ export default function ConfigMenu() {
             variant="ghost"
             size="icon"
             aria-label="set to Blank"
-            onClick={() => setPatternType(InitialPattern.Blank)}
+            onClick={() => handlePatternChange(InitialPattern.Glider)}
           >
-            <Square className="size-4 stroke-foreground" />
+            <ArrowUpRight className="size-4 stroke-foreground" />
           </Button>
         </div>
 
@@ -79,7 +95,7 @@ export default function ConfigMenu() {
         </CollapsibleTrigger>
       </div>
 
-      <CollapsibleContent open={isOpen}>
+      <CollapsibleContent key={contentKey} open={isOpen}>
         <div className="space-y-2 px-5 py-3 pb-4">
           <ConfigItem label="Grid Size" value={`${gridSize[0]}x${gridSize[1]}`}>
             <Slider
@@ -104,6 +120,19 @@ export default function ConfigMenu() {
               aria-label="Update Interval"
             />
           </ConfigItem>
+          {patternType.type === InitialPattern.Glider ? (
+            <ConfigItem label="Glider's Count" value={gliderCount}>
+              <Slider
+                defaultValue={[gliderCount]}
+                onValueChange={handleGliderCountChange}
+                min={1}
+                max={200}
+                step={1}
+                className="w-full"
+                aria-label="Update Glider's Count"
+              />
+            </ConfigItem>
+          ) : null}
         </div>
       </CollapsibleContent>
     </Collapsible>

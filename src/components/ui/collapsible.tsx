@@ -68,7 +68,7 @@ function CollapsibleContent({
               mass: 0.5,
               restDelta: 0.1,
             }}
-            className="overflow-hidden will-change-[height] contain-strict border-border space-y-2 px-5 py-3"
+            className="overflow-hidden will-change-[height] contain-strict border-border"
             ref={contentRef}
           >
             {children}

@@ -13,7 +13,8 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { useStore } from "@/store/useStore";
 
 const WebGPUCanvas: React.FC = () => {
-  const { gridSize, updateInterval, playing, patternType, gliderCount } = useStore();
+  const { gridSize, updateInterval, playing, patternType, gliderCount } =
+    useStore();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<Error | null>(null);
@@ -67,7 +68,12 @@ const WebGPUCanvas: React.FC = () => {
 
         pipeline = createPipeline(device, pipelineLayout);
         uniformBuffer = createUniformBuffer(device, gridSize);
-        storageBuffer = createStorageBuffer(device, gridSize, patternType.type, gliderCount);
+        storageBuffer = createStorageBuffer(
+          device,
+          gridSize,
+          patternType.type,
+          gliderCount,
+        );
 
         simulationPipeline = createSimulationPipeline(
           device,

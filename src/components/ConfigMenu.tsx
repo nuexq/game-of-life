@@ -9,6 +9,12 @@ import {
 import { ReactNode, useState } from "react";
 import { useStore } from "@/store/useStore";
 import { cn, InitialPattern } from "@/lib/utils";
+import {
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+  Tooltip,
+} from "./ui/tooltip";
 
 export default function ConfigMenu() {
   const {
@@ -25,7 +31,7 @@ export default function ConfigMenu() {
   } = useStore();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [contentKey, setContentKey] = useState(0); // Unique key to force re-render
+  const [contentKey, setContentKey] = useState(0);
 
   const handleGridSizeChange = (value: number[]) => {
     setGridSize(Math.max(16, Math.min(value[0], window.innerWidth)));
@@ -58,41 +64,49 @@ export default function ConfigMenu() {
     >
       <div className="flex items-center justify-between gap-4 px-5 py-3">
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Toggle Simulation"
-            onClick={() => setPlaying(!playing)}
-          >
-            {playing ? (
-              <Pause className="size-4 stroke-foreground" />
-            ) : (
-              <Play className="size-4 stroke-foreground" />
-            )}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="set to Random Pattern's"
-            onClick={() => handlePatternChange(InitialPattern.Random)}
-          >
-            <Dice5 className="size-4 stroke-foreground" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="set to Blank"
-            onClick={() => handlePatternChange(InitialPattern.Glider)}
-          >
-            <ArrowUpRight className="size-4 stroke-foreground" />
-          </Button>
+          <TooltipComponent label={playing ? "Pause" : "Play"}>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Toggle Pause/Play"
+              onClick={() => setPlaying(!playing)}
+            >
+              {playing ? (
+                <Pause className="size-4 stroke-foreground" />
+              ) : (
+                <Play className="size-4 stroke-foreground" />
+              )}
+            </Button>
+          </TooltipComponent>
+          <TooltipComponent label="Random Pattern">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="set to Random Pattern's"
+              onClick={() => handlePatternChange(InitialPattern.Random)}
+            >
+              <Dice5 className="size-4 stroke-foreground" />
+            </Button>
+          </TooltipComponent>
+          <TooltipComponent label="Glider Pattern">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="set to Blank"
+              onClick={() => handlePatternChange(InitialPattern.Glider)}
+            >
+              <ArrowUpRight className="size-4 stroke-foreground" />
+            </Button>
+          </TooltipComponent>
         </div>
 
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="icon" aria-label="Toggle Config Menu">
-            <ChevronsUpDown className="size-4 stroke-foreground" />
-          </Button>
-        </CollapsibleTrigger>
+        <TooltipComponent label="Toggle Config Menu">
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="icon" aria-label="Toggle Config Menu">
+              <ChevronsUpDown className="size-4 stroke-foreground" />
+            </Button>
+          </CollapsibleTrigger>
+        </TooltipComponent>
       </div>
 
       <CollapsibleContent key={contentKey} open={isOpen}>
@@ -156,5 +170,21 @@ const ConfigItem = ({
       </p>
       {children}
     </div>
+  );
+};
+
+const TooltipComponent = ({
+  children,
+  label,
+}: { children: ReactNode; label: string }) => {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>{children}</TooltipTrigger>
+        <TooltipContent>
+          <p>{label}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };

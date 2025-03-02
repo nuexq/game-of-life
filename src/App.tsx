@@ -5,7 +5,7 @@ export const UPDATE_INTERVAL = 100;
 
 export default function App() {
 	return (
-		<div className="flex h-screen w-screen items-center justify-center bg-neutral-800">
+		<div className="flex h-screen w-screen items-center justify-center">
 			<ConfigMenu />
 			<WebGPUCanvas />
 		</div>

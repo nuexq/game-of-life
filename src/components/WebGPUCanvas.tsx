@@ -166,8 +166,8 @@ const WebGPUCanvas: React.FC = () => {
             </p>
           ) : error.message === "Failed to get GPU adapter!" ? (
             <p className="text-sm text-muted-foreground">
-              Try to enable WebGPU in your browser settings
-              (chrome://flags/#enable-unsafe-webgpu)
+              Try to enable WebGPU and vulkan in your browser settings
+              (chrome://flags)
             </p>
           ) : (
             <p className="text-sm text-muted-foreground">

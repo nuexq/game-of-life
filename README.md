@@ -1,13 +1,13 @@
 # Conway's Game of Life
 
-A Conway's Game of Life implementation using WebGPU and React/Vite.
+This is my take on Conway’s Game of Life, built with WebGPU and React/Vite. I originally followed Google’s WebGPU course, where they make this game to teach WebGPU. After learning the basics, I added my own touches and improvements!
 
 ## Features
 
-- **WebGPU Rendering**: Fast and efficient.
-- **React UI**: Responsive and smooth.
-- **Customizabile**: grid size, speed, gliders.
-- **Pattern Generation**: Randomize patterns including the glider pattern.
+-  **Fast WebGPU rendering**  
+-  **Smooth & responsive React UI**  
+-  **Customizable** – tweak grid size, speed, and gliders  
+-  **Random pattern generation** – including gliders!  
 
 ## License
 

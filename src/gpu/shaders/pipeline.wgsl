@@ -1,7 +1,6 @@
 struct VertexOutput {
   @builtin(position) position: vec4f,
   @location(0) cell: vec2f,
-  @location(1) state: f32,
 };
 
 @group(0) @binding(0) var<uniform> grid: vec2f;
@@ -20,14 +19,10 @@ fn vertexMain(@location(0) position: vec2f,
     var output: VertexOutput;
     output.position = vec4f(gridPos, 0, 1);
     output.cell = cell;
-    output.state = state;
     return output;
 }
 
 @fragment
 fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
-    let activeColor = vec4f(0.7961, 0.6510, 0.9686, 1.0); // catppuccin mauve
-    let inactiveColor = vec4f(0.1176, 0.1176, 0.1804, 1.0); // catppuccin base 
-
-    return mix(inactiveColor, activeColor, input.state);
+    return vec4f(0.7961, 0.6510, 0.9686, 1.0); // catppuccin mocha mauve
 }
